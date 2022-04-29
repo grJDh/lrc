@@ -1,7 +1,7 @@
 import { TextInput, NumberInput, ActionIcon, Group } from '@mantine/core';
 import { Trash } from 'tabler-icons-react';
 
-const CustomRail = ({ index, updatedCustomRails }) => {
+const CustomPrice = ({ index, updatedCustomRails }) => {
 
   return (
     // <div className='flex flex-1 w-full justify-center gap-4'>
@@ -45,4 +45,4 @@ const CustomRail = ({ index, updatedCustomRails }) => {
   );
 }
 
-export default CustomRail;
+export default CustomPrice;

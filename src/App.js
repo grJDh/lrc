@@ -3,16 +3,16 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { MantineProvider, Paper, Divider } from '@mantine/core';
 
-import FromTo from './containers/FromTo';
-import Price from './containers/Price';
-import Path from './containers/Path';
-import Distance from './containers/Distance';
-import Time from './containers/Time';
-import Detailed from './containers/Detailed';
-import Settings from './containers/Settings';
+import FromTo from 'containers/FromTo';
+import Price from 'containers/Price';
+import Path from 'containers/Path';
+import Distance from 'containers/Distance';
+import Time from 'containers/Time';
+import Detailed from 'containers/Detailed';
+import Settings from 'containers/Settings';
 
-import { mainSelector, setDistance, setPath, setTime, setFormattedTime } from './slices/main';
-import { settingsSelector } from './slices/settings';
+import { mainSelector, setDistance, setPath, setTime, setFormattedTime } from 'slices/main';
+import { settingsSelector } from 'slices/settings';
 
 
 const App = () => {

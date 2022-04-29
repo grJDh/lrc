@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 
-import { mainSelector } from '../slices/main';
+import { mainSelector } from 'slices/main';
 
 import { Text } from '@mantine/core';
 

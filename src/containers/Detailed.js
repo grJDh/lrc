@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 
 import { Table, Button, Collapse } from '@mantine/core';
 
-import { mainSelector } from '../slices/main';
-// import { settingsSelector } from '../slices/settings';
+import { mainSelector } from 'slices/main';
+// import { settingsSelector } from 'slices/settings';
 
 const Detailed = ({ getTime }) => {
 

@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 
 import { Text } from '@mantine/core';
 
-import { mainSelector } from '../slices/main';
+import { mainSelector } from 'slices/main';
 // import { settingsSelector } from '../slices/settings';
 
 const Path = () => {

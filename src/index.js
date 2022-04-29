@@ -8,8 +8,8 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { combineReducers } from 'redux';
 
-import mainReducer from './slices/main';
-import settingsReducer from './slices/settings';
+import mainReducer from 'slices/main';
+import settingsReducer from 'slices/settings';
 
 const root = createRoot(document.getElementById("root"));
 

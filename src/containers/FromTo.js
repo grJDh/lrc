@@ -5,7 +5,7 @@ import { TextInput } from '@mantine/core';
 
 //https://mantine.dev/core/autocomplete/
 
-import { setFromStation, setToStation } from '../slices/main';
+import { setFromStation, setToStation } from 'slices/main';
 // import { mainSelector } from '../slices/main';
 
 const FromTo = props => {

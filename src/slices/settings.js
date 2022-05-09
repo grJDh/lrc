@@ -3,15 +3,16 @@ import { createSlice } from '@reduxjs/toolkit';
 const checkLocalStorage = (item, defualt) => localStorage.getItem(item) ? JSON.parse(localStorage.getItem(item)) : defualt;
 
 const baseState = {
-  priceMode: 'All',
+  priceMode: 'ECG (4E) - per mile',
   distanceSource: '4E',
   speed: 30,
   layover: 1,
+  discount: 0,
   coloredPrices: true,
   customRails: [
     ['Thaliost', "Rekkenmark", 27],
     ['Vedykar', "Vulyar", 147],
-    ['Vulyar', "Gatherhold", 302]
+    ['Vulyar', "Gatherhold", 302],
   ],
   customPrices: {
     'Custom - per mile': [
@@ -19,7 +20,7 @@ const baseState = {
     ],
     'Custom - per hour': [
       {tier: 'Standard', price: 1, pricingMethod:'per hour', mod: 24},
-    ]
+    ],
   },
 };
 
@@ -43,6 +44,9 @@ const settingsSlice = createSlice({
     setLayover: (state, { payload }) => {
       state.layover = payload;
     },
+    setDiscount: (state, { payload }) => {
+      state.discount = payload;
+    },
     setCustomRails: (state, { payload }) => {
       state.customRails = payload;
     },
@@ -55,7 +59,7 @@ const settingsSlice = createSlice({
   }
 });
 
-export const { setPriceMode, setDistanceSource, setSpeed, setCustomRails, setLayover, setCustomPrices, ColorPricesChange } = settingsSlice.actions;
+export const { setPriceMode, setDistanceSource, setSpeed, setCustomRails, setLayover, setDiscount, setCustomPrices, ColorPricesChange } = settingsSlice.actions;
 
 export const settingsSelector = state => state.settings;
 

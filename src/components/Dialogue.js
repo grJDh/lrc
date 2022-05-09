@@ -1,9 +1,9 @@
 import { Modal, Button } from '@mantine/core';
 
-const Dialogue = ({ opened, text, onClose, onYes, onNo }) => {
+const Dialogue = ({ opened, text, onYes, onNo }) => {
 
   return (
-    <Modal opened={opened} withCloseButton={false} centered onClose={onClose}>
+    <Modal opened={opened} withCloseButton={false} centered onClose={onNo}>
       
       {text}
 

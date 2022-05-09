@@ -5,7 +5,7 @@ const CustomRail = ({ index, updatedCustomRails }) => {
 
   return (
     // <div className='flex flex-1 w-full justify-center gap-4'>
-    <Group key={index} mt="xs">
+    <Group mt="xs">
       <TextInput
         placeholder="Thaliost"
         label="From..."

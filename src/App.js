@@ -205,9 +205,9 @@ const App = () => {
 
           <Divider my="sm" />
 
-          <div className='flex w-full flex-wrap m-5'>
+          {/* <div className='flex w-full flex-wrap m-5'>
             <Detailed getTime={getTime} />
-          </div>
+          </div> */}
 
           <div className='flex w-full flex-wrap m-5'>
             <Settings />

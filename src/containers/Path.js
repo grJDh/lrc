@@ -18,7 +18,7 @@ const Path = () => {
   ));
 
   return (
-    <div className='flex flex-1 w-full items-center flex-col'>
+    <div className='flex large:w-1/2 w-full mx-4 flex-col items-center'>
       <Text style={{ fontSize: '30px' }}>
         Stations:
       </Text>

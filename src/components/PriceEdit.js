@@ -1,40 +1,32 @@
-import { Group, TextInput, NumberInput, Select, ActionIcon } from '@mantine/core';
+import { TextInput, NumberInput, Select, ActionIcon } from '@mantine/core';
 import { Trash } from 'tabler-icons-react';
 
-const PriceEdit = ({ customPrice, index, updatedCustomPrices }) => {
+const PriceEdit = ({ index, updatedCustomPrices }) => {
 
   const modesList = [
-    'hour(s)',
-    'mile(s)',
+    { value: 'per hour', label: 'hour(s)' },
+    { value: 'per mile', label: 'mile(s)' },
   ];
 
-  const returnMode = () => {
-    if (customPrice.pricingMethod === 'per hour') return 'hour(s)';
-    else return 'mile(s)';
-  }
-
   return (
-    <Group mt="xs">
+    <div className='flex max-w-full justify-evenly items-end grow'>
       <TextInput 
         placeholder="Steerage"
         label="Name"
-        required
-        // size="lg"
-        // defaultValue={customPrice.tier}
         {...updatedCustomPrices.getListInputProps('prices', index, 'tier')}
       />
 
-      costs
+      <span className="mb-9px">
+        costs
+      </span>
 
       <NumberInput
         label='Price'
-        // onChange={onSpeedChange}
-        // defaultValue={customPrice.price}
-        required
         min={0.01}
         precision={2}
         step={1}
         {...updatedCustomPrices.getListInputProps('prices', index, 'price')}
+        className="max-w-100px"
         // parser={(value) => value.replace(/\g\p\s?|(,*)/g, '')}
         // formatter={(value) =>
         //   !Number.isNaN(parseFloat(value))
@@ -43,37 +35,36 @@ const PriceEdit = ({ customPrice, index, updatedCustomPrices }) => {
         // }
       />
 
-      gp for every
+      <span className="mb-9px">
+        gp for every
+      </span>
 
       <NumberInput
         label='Every'
-        // onChange={onSpeedChange}
-        // defaultValue={customPrice.mod}
-        required
         min={0.01}
         precision={2}
         step={1}
         {...updatedCustomPrices.getListInputProps('prices', index, 'mod')}
+        className="max-w-100px"
       />
 
       <Select
         data={modesList}
         label='Mode'
-        required
-        // onChange={onDistanceSourceChange}
-        // defaultValue={returnMode()}
         {...updatedCustomPrices.getListInputProps('prices', index, 'pricingMethod')}
+        className="max-w-100px"
       />
 
       <ActionIcon
         color="red"
         variant="hover"
         onClick={() => updatedCustomPrices.removeListItem('prices', index)}
+        className="mb-5px"
       >
         <Trash size={16} />
       </ActionIcon>
 
-    </Group>
+    </div>
   );
 }
 

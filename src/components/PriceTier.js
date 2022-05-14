@@ -1,6 +1,6 @@
 import { Text } from '@mantine/core';
 
-const PriceTierOutput = ({ formattedPrice, coloredPrices, tierName }) => {
+const PriceTier = ({ formattedPrice, coloredPrices, tierName, isList=true }) => {
 
   const colorPrices = p => {
     const shadowColor = 'black 0px 0px 30px';
@@ -21,10 +21,13 @@ const PriceTierOutput = ({ formattedPrice, coloredPrices, tierName }) => {
     return {color: '#c1c2c5', fontSize: '25px'}
   }
 
+  const componentType = (isList) ? "li" : "";
+  const align = (isList) ? "left" : "right";
+
   return (
-    <Text component="li" style={{ fontSize: '25px', listStyleType: 'circle' }}>
-      <Text component="span" style={{ fontSize: '25px' }}>
-        {tierName + ': '}
+    <Text component={componentType} align={align} style={{ fontSize: '25px', listStyleType: 'circle', minWidth: "200px"}}>
+      <Text component="span" style={{ fontSize: '25px' }} className="">
+        {(isList) && tierName + ': '}
       </Text>
       <Text component="span" style={colorPrices('gold')} weight={700}>
         {formattedPrice[0] ? formattedPrice[0] + 'gp ' : ''}
@@ -39,4 +42,4 @@ const PriceTierOutput = ({ formattedPrice, coloredPrices, tierName }) => {
   );
 }
 
-export default PriceTierOutput;
+export default PriceTier;

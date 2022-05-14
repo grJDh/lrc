@@ -1,19 +1,28 @@
-import { Modal, Button } from '@mantine/core';
+import { Modal, Button, Text } from '@mantine/core';
 
 const Dialogue = ({ opened, text, onYes, onNo }) => {
 
   return (
-    <Modal opened={opened} withCloseButton={false} centered onClose={onNo}>
-      
-      {text}
+    <Modal
+      opened={opened}
+      withCloseButton={false}
+      centered
+      onClose={onNo}
+      className="flex flex-col justify-center"
+    >
+      <Text style={{ fontSize: "20px" }} align="center">
+        {text}
+      </Text>
 
-      <Button onClick={onYes}>
-        Yes
-      </Button>
+      <div className="flex justify-center">
+        <Button onClick={onYes}>
+          Yes
+        </Button>
 
-      <Button onClick={onNo}>
-        No
-      </Button>
+        <Button onClick={onNo}>
+          No
+        </Button>
+      </div>
     </Modal>
   );
 }

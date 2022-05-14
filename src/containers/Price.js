@@ -2,12 +2,12 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { mainSelector } from "slices/main";
-import { settingsSelector, setCustomPrices, setPriceMode } from "slices/settings";
+import { settingsSelector, setCustomPrices, setPriceMode, setIsEditingPrice } from "slices/settings";
 
 import { Text, Button, Select, Modal, TextInput } from "@mantine/core";
 import { useForm, formList } from "@mantine/form";
 
-import PriceTierOutput from "components/PriceTierOutput";
+import PriceTier from "components/PriceTier";
 import PriceEdit from "components/PriceEdit";
 import Dialogue from "components/Dialogue";
 
@@ -15,47 +15,36 @@ const Price = () => {
   const dispatch = useDispatch();
 
   const { distance, basePrices } = useSelector(mainSelector);
-  const { priceMode, speed, customPrices, discount, coloredPrices } = useSelector(settingsSelector);
+  const { priceMode, speed, customPrices, discount, coloredPrices, isEditingPrice } = useSelector(settingsSelector);
 
   const combinedPrices = { ...basePrices, ...customPrices };
-
   const pricingList = [...Object.keys(combinedPrices), "+"];
 
-  const [isEditing, setIsEditing] = useState(false);
   const [resetModal, toggleResetModal] = useState(false);
   const [deleteModal, toggleDeleteModal] = useState(false);
 
   const [newPricingMethodModal, toggleNewPricingMethodModal] = useState(false);
   const [newPricingMethodName, setNewPricingMethodName] = useState("");
 
+  const containerStyle = "flex flex-col items-center justify-start large:mx-4 "
+  + ((isEditingPrice)
+  ? "w-full"
+  : "large:w-1/2 w-full")
+
   const onPriceModeChange = (value) => {
     if (value === "+") toggleNewPricingMethodModal(true);
-    else dispatch(setPriceMode(value));
-  };
+    else {
+      dispatch(setPriceMode(value));
 
-  const changePricingMethodWording = (array, back) => {
-    // comment
-    let tempCustomPrices = [...array];
-
-    if (back) {
-      tempCustomPrices.forEach((tier, index) => {
-        if (tier.pricingMethod === "hour(s)") tempCustomPrices[index] = {...tempCustomPrices[index], pricingMethod: "per hour"};
-        else tempCustomPrices[index] = {...tempCustomPrices[index], pricingMethod: "per mile"};
+      updatedCustomPrices.setValues({
+        prices: formList([...combinedPrices[value]]),
       });
-
-    } else {
-      tempCustomPrices.forEach((tier, index) => {
-        if (tier.pricingMethod === "per hour") tempCustomPrices[index] = { ...tempCustomPrices[index], pricingMethod: "hour(s)"};
-        else tempCustomPrices[index] = { ...tempCustomPrices[index], pricingMethod: "mile(s)"};
-      });
-    }
-
-    return tempCustomPrices;
+    } 
   };
 
   const updatedCustomPrices = useForm({
     initialValues: {
-      prices: formList(changePricingMethodWording(combinedPrices[priceMode], false)),
+      prices: formList([...combinedPrices[priceMode]]),
     },
   });
 
@@ -71,50 +60,51 @@ const Price = () => {
     closeNewPricingMethodDialogue();
     dispatch(setCustomPrices(tempCustomPrices));
 
-    setIsEditing(false);
+    dispatch(setIsEditingPrice(false));
     toggleDeleteModal(false);
   };
 
   const saveChanges = () => {
+
     dispatch(
       setCustomPrices({
         ...customPrices,
-        [priceMode]: changePricingMethodWording(updatedCustomPrices.values.prices, true),
+        [priceMode]: updatedCustomPrices.values.prices,
       })
     );
 
-    const bla = {
-      Custom: [
-        {
-          tier: "First Class",
-          price: 25,
-          pricingMethod: "per hour",
-          mod: 24,
-        },
-        {
-          tier: "Sleeping",
-          price: 6,
-          pricingMethod: "per hour",
-          mod: 24,
-        },
-        {
-          tier: "Seating",
-          price: 4,
-          pricingMethod: "per hour",
-          mod: 24,
-        },
-        {
-          tier: "Steerage",
-          price: 1,
-          pricingMethod: "per hour",
-          mod: 24,
-        },
-      ],
-    };
+    // const bla = {
+    //   Custom: [
+    //     {
+    //       tier: "First Class",
+    //       price: 25,
+    //       pricingMethod: "per hour",
+    //       mod: 24,
+    //     },
+    //     {
+    //       tier: "Sleeping",
+    //       price: 6,
+    //       pricingMethod: "per hour",
+    //       mod: 24,
+    //     },
+    //     {
+    //       tier: "Seating",
+    //       price: 4,
+    //       pricingMethod: "per hour",
+    //       mod: 24,
+    //     },
+    //     {
+    //       tier: "Steerage",
+    //       price: 1,
+    //       pricingMethod: "per hour",
+    //       mod: 24,
+    //     },
+    //   ],
+    // };
 
     // dispatch(setCustomPrices(bla));
 
-    setIsEditing(false);
+    dispatch(setIsEditingPrice(false));
   };
 
   const calculateAndFormatPrice = (tier) => {
@@ -133,46 +123,50 @@ const Price = () => {
     ];
   };
 
-  const returnPrice = () => {
-    if (isEditing) return changePricingMethodWording(updatedCustomPrices.values.prices, true);
-    else return combinedPrices[priceMode];
-  };
-
   const renderPrices = () => {
     return (
-      <span>
-
-        <Text weight={500} underline style={{ fontSize: "25px" }}>
+      <div className="flex flex-col items-center w-full">
+        <Text weight={500} underline style={{ fontSize: "25px" }} className="-mt-3.5 w-full">
           <Select data={pricingList} label="Pricing method" onChange={onPriceModeChange} value={priceMode} />
         </Text>
 
-        <ul className="pl-5">
-
-          {returnPrice().map((tier) => (
-            <PriceTierOutput
+        <ul className="pl-5 my-4">
+          {combinedPrices[priceMode].map((tier) => (
+            <PriceTier
               key={priceMode + tier.tier}
               formattedPrice={calculateAndFormatPrice(tier)}
               coloredPrices={coloredPrices}
               tierName={tier.tier}
             />
           ))}
-
         </ul>
-      </span>
-    );
+
+        {!isEditingPrice && !Object.keys(basePrices).includes(priceMode) &&
+          <Button onClick={() => dispatch(setIsEditingPrice(true))}>Edit</Button>
+        }
+      </div>
+    )
   };
 
   const renderEditing = () => {
     return (
-      <div className="flex flex-1 w-full justify-center gap-4 flex-col">
+      <div className="flex w-full justify-center gap-4 flex-col">
       
-        {updatedCustomPrices.values.prices.map((_, index) => (
-          <PriceEdit
-            updatedCustomPrices={updatedCustomPrices}
-            // onSetUpdatedCustomPrices={onSetUpdatedCustomPrices}
-            index={index}
-            key={index}
-          />
+        {updatedCustomPrices.values.prices.map((tier, index) => (
+          <div key={index} className="flex items-end justify-between">
+            <PriceEdit
+              updatedCustomPrices={updatedCustomPrices}
+              // onSetUpdatedCustomPrices={onSetUpdatedCustomPrices}
+              index={index}
+            />
+
+            <PriceTier
+              formattedPrice={calculateAndFormatPrice(tier)}
+              coloredPrices={coloredPrices}
+              tierName={''}
+              isList={false}
+            />
+          </div>
         ))}
 
         <Button
@@ -180,24 +174,24 @@ const Price = () => {
             updatedCustomPrices.addListItem("prices", {
               tier: "",
               price: 1,
-              pricingMethod: "hour(s)",
+              pricingMethod: "per hour",
               mod: 1,
-            })
+            })  
           }
         >
           +
         </Button>
 
-        <Button onClick={saveChanges}>Save</Button>
+        <div className="flex justify-evenly">
+          <Button onClick={saveChanges}>Save</Button>
 
-        <Button onClick={() => toggleResetModal(true)}>Reset</Button>
+          <Button onClick={() => toggleResetModal(true)}>Reset</Button>
 
-        <Button onClick={() => toggleDeleteModal(true)}>Delete pricing method</Button>
+          <Button onClick={() => toggleDeleteModal(true)}>Delete pricing method</Button>
+        </div>
       </div>
     );
   };
-
-  const renderEditButton = () => <Button onClick={() => setIsEditing(true)}>Edit</Button>;
 
   const addNewPricingMethod = () => {
     dispatch(setPriceMode(newPricingMethodName));
@@ -208,6 +202,12 @@ const Price = () => {
         [newPricingMethodName]: [{ tier: "Tier1", price: 1, pricingMethod: "per mile", mod: 1 }],
       })
     );
+
+    // console.log(combinedPrices)
+
+    updatedCustomPrices.setValues({
+      prices: formList([{ tier: "Tier1", price: 1, pricingMethod: "per mile", mod: 1 }]),
+    });
 
     setNewPricingMethodName("");
 
@@ -223,7 +223,11 @@ const Price = () => {
   };
 
   return (
-    <div className="flex flex-1 w-full justify-center gap-4 flex-col">
+    <div className={containerStyle}>
+      <Text style={{ fontSize: '30px' }} className="mb-1">
+        Price:
+      </Text>
+
       <Modal opened={newPricingMethodModal} withCloseButton={false} centered onClose={closeNewPricingMethodDialogue}>
         <TextInput
           label="Please, name your new pricing method"
@@ -252,11 +256,9 @@ const Price = () => {
         onNo={() => toggleResetModal(false)}
       />
 
-      {isEditing && renderEditing()}
+      {!isEditingPrice && renderPrices()}
 
-      {!isEditing && !Object.keys(basePrices).includes(priceMode) && renderEditButton()}
-
-      {renderPrices()}
+      {isEditingPrice && renderEditing()}
     </div>
   );
 };

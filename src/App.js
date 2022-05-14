@@ -1,31 +1,26 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { MantineProvider, Paper, Divider } from '@mantine/core';
+import { MantineProvider, Paper, Divider, Group } from '@mantine/core';
 
 import FromTo from 'containers/FromTo';
 import Price from 'containers/Price';
 import Path from 'containers/Path';
 import Distance from 'containers/Distance';
 import Time from 'containers/Time';
-import Detailed from 'containers/Detailed';
+// import Detailed from 'containers/Detailed';
 import Settings from 'containers/Settings';
 
-import { mainSelector, setDistance, setPath, setTime, setFormattedTime } from 'slices/main';
+import { mainSelector, setDistance, setPath } from 'slices/main';
 import { settingsSelector } from 'slices/settings';
 
 
 const App = () => {
   const dispatch = useDispatch();
-  const { fromStation, toStation, rails4E, rails3E, distance, path } = useSelector(mainSelector);
-  const { layover, speed } = useSelector(settingsSelector);
+  const { fromStation, toStation, rails4E, rails3E, distance } = useSelector(mainSelector);
+  const { layover, speed, distanceSource, customRails, isEditingPrice } = useSelector(settingsSelector);
 
   const [error, setError] = useState(false);
-
-  //temp
-  const distanceSource = '4E';
-  const customRails = [];
-  //temp
 
   const getRailsSource = () => {
     switch (distanceSource) {
@@ -178,38 +173,43 @@ const App = () => {
 
   useEffect(() => {
     if (fromStation !== '' && toStation !== '') letsTravel();
-    // eslint-disable-next-line
   }, [toStation, fromStation]);
   //customPrices, customRails, 
+
+  const renderAnswer = () => (
+    <div className='flex flex-initial flex-col w-full p-3'>
+      <div className='flex justify-center items-start'>
+        <Distance />
+        <Time getTime={getTime} />
+      </div>
+
+      <Divider my="sm" style={{ marginTop: '20px' }} />
+  
+      <div className='flex large:flex-row flex-col justify-center items-start'>
+        <Price />
+        <Divider my="sm" className="large:hidden block" />
+        {(!isEditingPrice) && <Path />}
+      </div>
+
+      <Divider my="sm" />
+
+      {/* <div className='flex w-full flex-wrap m-5'>
+        <Detailed getTime={getTime} />
+      </div> */}
+    </div>
+  )
 
   return (
     <MantineProvider theme={{colorScheme: 'dark', }}>
       <div className='flex justify-center'>
-        <Paper shadow="xl" radius="md" p="md" className='max-w-6xl flex flex-wrap flex-auto flex-col content-center m-10 p-5'>
+        <Paper shadow="xl" radius="md" p="md" className='flex flex-col justify-center max-w-5xl w-full m-2 large:m-10 p-3'>
 
-          <div className='flex w-full m-5'>
-            <FromTo stations={stations} />
-          </div>
+          <FromTo stations={stations} />
 
-          <div className='flex w-full flex-wrap m-5'>
-            <Distance />
-            <Time getTime={getTime} />
-          </div>
+          {/* {error ? <span className='error-message'>One or both stations doesn't exist</span> : ''} */}
+          {(!error && distance !== 0) && renderAnswer()}
 
-          <Divider my="sm" />
-
-          <div className='flex w-full flex-wrap m-5'>
-            <Price />
-            <Path />
-          </div>
-
-          <Divider my="sm" />
-
-          {/* <div className='flex w-full flex-wrap m-5'>
-            <Detailed getTime={getTime} />
-          </div> */}
-
-          <div className='flex w-full flex-wrap m-5'>
+          <div className='flex justify-center items-start'>
             <Settings />
           </div>
 

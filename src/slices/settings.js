@@ -9,6 +9,7 @@ const baseState = {
   layover: 1,
   discount: 0,
   coloredPrices: true,
+  isEditingPrice: false,
   customRails: [
     ['Thaliost', "Rekkenmark", 27],
     ['Vedykar', "Vulyar", 147],
@@ -53,13 +54,16 @@ const settingsSlice = createSlice({
     setCustomPrices: (state, { payload }) => {
       state.customPrices = payload;
     },
-    ColorPricesChange: state => {
+    colorPricesChange: state => {
       state.coloredPrices = !state.coloredPrices;
+    },
+    setIsEditingPrice: (state, { payload }) => {
+      state.isEditingPrice = payload;
     },
   }
 });
 
-export const { setPriceMode, setDistanceSource, setSpeed, setCustomRails, setLayover, setDiscount, setCustomPrices, ColorPricesChange } = settingsSlice.actions;
+export const { setPriceMode, setDistanceSource, setSpeed, setCustomRails, setLayover, setDiscount, setCustomPrices, colorPricesChange, setIsEditingPrice } = settingsSlice.actions;
 
 export const settingsSelector = state => state.settings;
 
